@@ -61,7 +61,7 @@ export default function Page() {
                     }
                   })
                 }}
-                className={clsx('', {
+                className={clsx({
                   'p-10 bg-white bg-opacity-75 !flex-row gap-8 rounded-xl':
                     isExpanded[letter][i],
                 })}
@@ -89,21 +89,14 @@ export default function Page() {
                   />
                 </picture>
                 <div
-                  className={clsx(
-                    {
-                      'basis-1/2': isExpanded[letter][i],
-                    },
-                    isExpanded[letter][i] ? '' : ''
-                  )}
+                  className={clsx({
+                    'basis-1/2': isExpanded[letter][i],
+                  })}
                 >
                   <h1
                     className={clsx(
-                      {
-                        'text-3xl font-bold sm:text-4xl xl:text-5xl mb-3':
-                          isExpanded[letter][i],
-                      },
                       isExpanded[letter][i]
-                        ? ''
+                        ? 'text-3xl font-bold sm:text-4xl xl:text-5xl mb-3'
                         : 'text-center font-bold pt-2 pb-3'
                     )}
                   >
@@ -116,7 +109,6 @@ export default function Page() {
                           <StarIcon key={k} className="w-4 h-4 fill-current" />
                         ))}
                       </div>
-
                       <p
                         className="text-gray-500 md:text-xl lg:text-base xl:text-xl"
                         // dark:text-gray-400
