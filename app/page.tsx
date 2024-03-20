@@ -1,12 +1,12 @@
 'use client'
 
-import clsx from 'clsx'
+import { Stars } from '@/components/Stars'
+import { classify, cn, range } from '@/lib/utils'
 import { useState, type SVGAttributes } from 'react'
 import { MagicCard } from 'react-magic-motion'
 import 'react-magic-motion/card.css'
 import doubanLogo from './assets/douban.png'
 import { works } from './data'
-import { alphabetRange, classify } from './utils'
 
 export interface Work {
   name: string
@@ -23,7 +23,7 @@ export default function Page() {
   }
   const [isExpanded, setIsExpanded] = useState(
     Object.fromEntries(
-      alphabetRange().map((letter) => [
+      range('A', 26).map((letter) => [
         letter,
         Array.from({ length: 100 }, () => false),
       ])
@@ -40,7 +40,7 @@ export default function Page() {
               onBackgroundFadeClick={() =>
                 setIsExpanded(
                   Object.fromEntries(
-                    alphabetRange().map((letter) => [
+                    range('A', 26).map((letter) => [
                       letter,
                       Array.from({ length: 100 }, () => false),
                     ])
@@ -61,13 +61,13 @@ export default function Page() {
                     }
                   })
                 }}
-                className={clsx({
+                className={cn({
                   'p-10 bg-white bg-opacity-75 !flex-row gap-8 rounded-xl':
                     isExpanded[letter][i],
                 })}
               >
                 <picture
-                  className={clsx({
+                  className={cn({
                     'basis-1/2': isExpanded[letter][i],
                   })}
                 >
@@ -82,19 +82,19 @@ export default function Page() {
                   <img
                     src={work.cover}
                     alt={work.name}
-                    className={clsx(
+                    className={cn(
                       'w-full aspect-[3_/_4]',
                       isExpanded[letter][i] ? 'object-contain' : 'object-cover'
                     )}
                   />
                 </picture>
                 <div
-                  className={clsx({
+                  className={cn({
                     'basis-1/2': isExpanded[letter][i],
                   })}
                 >
                   <h1
-                    className={clsx(
+                    className={cn(
                       isExpanded[letter][i]
                         ? 'text-3xl font-bold sm:text-4xl xl:text-5xl mb-3'
                         : 'text-center font-bold pt-2 pb-3'
@@ -105,9 +105,7 @@ export default function Page() {
                   {isExpanded[letter][i] && (
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-1">
-                        {Array.from({ length: work.like }, (_v, k) => (
-                          <StarIcon key={k} className="w-4 h-4 fill-current" />
-                        ))}
+                        <Stars count={work.like} />
                       </div>
                       <p
                         className="text-gray-500 md:text-xl lg:text-base xl:text-xl"
@@ -137,7 +135,7 @@ export default function Page() {
   )
 }
 
-function StarIcon(props: SVGAttributes<SVGSVGElement>) {
+export function StarIcon(props: SVGAttributes<SVGSVGElement>) {
   return (
     <svg
       {...props}
