@@ -11,9 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import type { Work } from '@prisma/client'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
-import { type Work } from '../page'
 
 export const columns: ColumnDef<Work>[] = [
   {
@@ -88,9 +88,8 @@ export const columns: ColumnDef<Work>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
-      const work = row.original
-
+    cell: () => {
+      // const work = row.original
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
