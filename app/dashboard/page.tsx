@@ -4,7 +4,7 @@ import UserNav from './UserNav'
 import { columns } from './columns'
 
 export default async function Page() {
-  const works = await prisma.work.findMany()
+  const works = await prisma.work.findMany({ orderBy: { createdAt: 'desc' } })
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
       <div className="flex items-center justify-between space-y-2">

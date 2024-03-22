@@ -5,26 +5,41 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+interface Category<T> {
+  letter: string
+  items: T[]
+}
+
+let categories: Category<unknown>[] | null = null
+
 export const classify = <T>(targets: T[], getter: (target: T) => string) => {
-  const alphabetRange = range('A', 26)
-  const benchmark = {
-    en: alphabetRange,
-    'zh-Hans-CN': '阿八嚓哒妸发旮哈讥讥咔垃妈拏噢妑七呥扨它穵 穵夕丫帀'.split(
-      ''
-    ),
-  }
-  return alphabetRange.map((letter, i) => {
-    const items = targets.filter((target) => {
-      const first = getter(target)[0]
-      const locale = isAlphabet(first) ? 'en' : 'zh-Hans-CN'
-      return !(
-        (locale === 'zh-Hans-CN' && ['I', 'U', 'V'].includes(letter)) ||
-        first.localeCompare(benchmark[locale][i], locale) < 0 ||
-        first.localeCompare(benchmark[locale][i + 1], locale) >= 0
-      )
+  if (categories === null) {
+    const alphabetRange = range('A', 26)
+    const benchmark = {
+      en: alphabetRange,
+      'zh-Hans-CN': '阿八嚓哒妸发旮哈讥讥咔垃妈拏噢妑七呥扨它穵 穵夕丫帀'.split(
+        ''
+      ),
+    }
+    categories = alphabetRange.map((letter, i) => {
+      const items = targets.filter((target) => {
+        const first = getter(target)[0]
+        const [locale, options]: [
+          keyof typeof benchmark,
+          Intl.CollatorOptions
+        ] = isAlphabet(first)
+          ? ['en', { sensitivity: 'base' }]
+          : ['zh-Hans-CN', {}]
+        return !(
+          (locale === 'zh-Hans-CN' && ['I', 'U', 'V'].includes(letter)) ||
+          first.localeCompare(benchmark[locale][i], locale, options) < 0 ||
+          first.localeCompare(benchmark[locale][i + 1], locale, options) >= 0
+        )
+      })
+      return { letter, items }
     })
-    return { letter, items }
-  })
+  }
+  return categories as Category<T>[]
 }
 
 export const classifyAndSort = <T>(
@@ -37,6 +52,9 @@ export const classifyAndSort = <T>(
       getter(a).localeCompare(getter(b), 'zh-Hans-CN')
     ),
   }))
+
+export const sortAndFlat = <T>(targets: T[], getter: (target: T) => string) =>
+  classifyAndSort(targets, getter).flatMap(({ items }) => items)
 
 const isAlphabet = (c: string) => /^[A-Za-z]$/.test(c)
 

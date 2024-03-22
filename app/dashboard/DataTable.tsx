@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { sortAndFlat } from '@/lib/utils'
 import {
   flexRender,
   getCoreRowModel,
@@ -47,6 +48,12 @@ export default function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
     state: { sorting, columnFilters, rowSelection },
+    sortingFns: {
+      sortByName: (a, b) => {
+        const sorted = sortAndFlat(data, ({ name }: any) => name)
+        return sorted.indexOf(a.original) - sorted.indexOf(b.original)
+      },
+    },
   })
 
   return (

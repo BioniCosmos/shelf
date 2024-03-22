@@ -12,8 +12,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { Work } from '@prisma/client'
-import type { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef, SortingFn } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+
+declare module '@tanstack/react-table' {
+  interface SortingFns {
+    sortByName: SortingFn<Work>
+  }
+}
 
 export const columns: ColumnDef<Work>[] = [
   {
@@ -52,7 +58,7 @@ export const columns: ColumnDef<Work>[] = [
       )
     },
     cell: ({ row }) => <div className="font-bold">{row.getValue('name')}</div>,
-    sortingFn: () => -1,
+    sortingFn: 'sortByName',
   },
   {
     accessorKey: 'like',

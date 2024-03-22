@@ -9,10 +9,11 @@ datasource db {
 }
 
 model Work {
-  id      String @id @default(uuid()) @db.Uuid
-  name    String
-  cover   String
-  like    Int
-  comment String
-  link    String
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  cover     String
+  like      Int
+  comment   String
+  link      String
+  createdAt DateTime @default(now())
 }
