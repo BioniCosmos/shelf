@@ -27,6 +27,17 @@ export const classify = <T>(targets: T[], getter: (target: T) => string) => {
   })
 }
 
+export const classifyAndSort = <T>(
+  targets: T[],
+  getter: (target: T) => string
+) =>
+  classify(targets, getter).map((target) => ({
+    ...target,
+    items: target.items.toSorted((a, b) =>
+      getter(a).localeCompare(getter(b), 'zh-Hans-CN')
+    ),
+  }))
+
 const isAlphabet = (c: string) => /^[A-Za-z]$/.test(c)
 
 export function range(length: number): number[]
