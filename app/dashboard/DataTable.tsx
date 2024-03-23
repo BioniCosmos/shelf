@@ -23,6 +23,7 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import { useState } from 'react'
+import FormDialog from './FormDialog'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -57,8 +58,8 @@ export default function DataTable<TData, TValue>({
   })
 
   return (
-    <>
-      <div className="flex items-center py-4">
+    <div>
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter names…"
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
@@ -67,6 +68,9 @@ export default function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <FormDialog>
+          <Button>Create a new work</Button>
+        </FormDialog>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -134,6 +138,6 @@ export default function DataTable<TData, TValue>({
           Next
         </Button>
       </div>
-    </>
+    </div>
   )
 }
