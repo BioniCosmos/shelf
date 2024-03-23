@@ -20,13 +20,22 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cn } from '@/lib/utils'
-import { useState, type ComponentProps, type ReactElement } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  type ComponentProps,
+  type MouseEventHandler,
+  type ReactElement,
+} from 'react'
 import { useFormStatus } from 'react-dom'
 import { createWork } from './work'
 
 interface Props {
   children: ReactElement
 }
+
+const Context = createContext<(value: boolean) => void>(() => {})
 
 export default function FormDialog({ children }: Props) {
   const [open, setOpen] = useState(false)
@@ -40,7 +49,9 @@ export default function FormDialog({ children }: Props) {
           <DialogHeader>
             <DialogTitle>{children.props.children}</DialogTitle>
           </DialogHeader>
-          <ProfileForm />
+          <Context.Provider value={setOpen}>
+            <WorkForm />
+          </Context.Provider>
         </DialogContent>
       </Dialog>
     )
@@ -53,7 +64,9 @@ export default function FormDialog({ children }: Props) {
         <DrawerHeader className="text-left">
           <DrawerTitle>{children.props.children}</DrawerTitle>
         </DrawerHeader>
-        <ProfileForm className="px-4" />
+        <Context.Provider value={setOpen}>
+          <WorkForm className="px-4" />
+        </Context.Provider>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -64,12 +77,9 @@ export default function FormDialog({ children }: Props) {
   )
 }
 
-function ProfileForm({ className }: ComponentProps<'form'>) {
+function WorkForm({ className }: ComponentProps<'form'>) {
   return (
-    <form
-      action={createWork}
-      className={cn('grid items-start gap-4', className)}
-    >
+    <form className={cn('grid items-start gap-4', className)}>
       <div className="grid gap-2">
         <Label htmlFor="name">Name</Label>
         <Input id="name" name="name" required />
@@ -110,8 +120,18 @@ function ProfileForm({ className }: ComponentProps<'form'>) {
 
 function SubmitButton() {
   const { pending } = useFormStatus()
+  const setOpen = useContext(Context)
+
+  const submit: MouseEventHandler<HTMLButtonElement> = async (event) => {
+    const form = event.currentTarget.parentElement
+    if (form instanceof HTMLFormElement && form.reportValidity()) {
+      await createWork(new FormData(form))
+      setOpen(false)
+    }
+  }
+
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="button" disabled={pending} onClick={submit}>
       Save changes
     </Button>
   )

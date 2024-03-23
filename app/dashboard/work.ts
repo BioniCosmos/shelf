@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 const createWorkSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   cover: z.string().url().startsWith('https://'),
   like: z.coerce.number().min(1).max(5),
   comment: z.string(),
