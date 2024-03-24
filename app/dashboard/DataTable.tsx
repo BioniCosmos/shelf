@@ -37,7 +37,6 @@ export default function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [rowSelection, setRowSelection] = useState({})
   const [open, setOpen] = useState(false)
 
   const table = useReactTable({
@@ -49,8 +48,7 @@ export default function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    onRowSelectionChange: setRowSelection,
-    state: { sorting, columnFilters, rowSelection },
+    state: { sorting, columnFilters },
     sortingFns: {
       sortByName: (a, b) => {
         const sorted = sortAndFlat(data, ({ name }: any) => name)

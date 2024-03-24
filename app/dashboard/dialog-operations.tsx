@@ -73,13 +73,13 @@ function SubmitButton() {
   )
 }
 
-export function DeleteWorkButton({ ids }: { ids: string[] }) {
+export function DeleteWorkButton({ id }: { id: string }) {
   const [disabled, setDisabled] = useState(false)
   const { setOpen } = useContext(DialogContext)
 
   const submit: MouseEventHandler<HTMLButtonElement> = async () => {
     setDisabled(true)
-    await deleteWork(ids)
+    await deleteWork(id)
     setOpen(false)
   }
 
