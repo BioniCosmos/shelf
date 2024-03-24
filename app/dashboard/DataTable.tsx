@@ -23,7 +23,8 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import FormDialog from './FormDialog'
+import FormDialog from './Dialog'
+import { WorkForm } from './dialog-operations'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -37,6 +38,7 @@ export default function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = useState({})
+  const [open, setOpen] = useState(false)
 
   const table = useReactTable({
     data,
@@ -68,8 +70,9 @@ export default function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <FormDialog>
-          <Button>Create a new work</Button>
+        <Button onClick={() => setOpen(true)}>Create a new work</Button>
+        <FormDialog state={{ open, setOpen }} title="Create a new work">
+          <WorkForm />
         </FormDialog>
       </div>
       <div className="rounded-md border">

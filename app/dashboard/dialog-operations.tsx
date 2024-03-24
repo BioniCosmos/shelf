@@ -1,83 +1,19 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { useMediaQuery } from '@/hooks/use-media-query'
 import { cn } from '@/lib/utils'
 import {
-  createContext,
   useContext,
   useState,
   type ComponentProps,
   type MouseEventHandler,
-  type ReactElement,
 } from 'react'
 import { useFormStatus } from 'react-dom'
-import { createWork } from './work'
+import { DialogContext } from './Dialog'
+import { createWork, deleteWork } from './work'
 
-interface Props {
-  children: ReactElement
-}
-
-const Context = createContext<(value: boolean) => void>(() => {})
-
-export default function FormDialog({ children }: Props) {
-  const [open, setOpen] = useState(false)
-  const isDesktop = useMediaQuery('(min-width: 768px)')
-
-  if (isDesktop) {
-    return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{children.props.children}</DialogTitle>
-          </DialogHeader>
-          <Context.Provider value={setOpen}>
-            <WorkForm />
-          </Context.Provider>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-
-  return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>{children}</DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>{children.props.children}</DrawerTitle>
-        </DrawerHeader>
-        <Context.Provider value={setOpen}>
-          <WorkForm className="px-4" />
-        </Context.Provider>
-        <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  )
-}
-
-function WorkForm({ className }: ComponentProps<'form'>) {
+export function WorkForm({ className }: ComponentProps<'form'>) {
   return (
     <form className={cn('grid items-start gap-4', className)}>
       <div className="grid gap-2">
@@ -120,7 +56,7 @@ function WorkForm({ className }: ComponentProps<'form'>) {
 
 function SubmitButton() {
   const { pending } = useFormStatus()
-  const setOpen = useContext(Context)
+  const { setOpen } = useContext(DialogContext)
 
   const submit: MouseEventHandler<HTMLButtonElement> = async (event) => {
     const form = event.currentTarget.parentElement
@@ -132,7 +68,26 @@ function SubmitButton() {
 
   return (
     <Button type="button" disabled={pending} onClick={submit}>
-      Save changes
+      Save
     </Button>
+  )
+}
+
+export function DeleteWorkButton({ ids }: { ids: string[] }) {
+  const [disabled, setDisabled] = useState(false)
+  const { setOpen } = useContext(DialogContext)
+
+  const submit: MouseEventHandler<HTMLButtonElement> = async () => {
+    setDisabled(true)
+    await deleteWork(ids)
+    setOpen(false)
+  }
+
+  return (
+    <div className="grid items-start">
+      <Button variant="destructive" disabled={disabled} onClick={submit}>
+        Confirm
+      </Button>
+    </div>
   )
 }

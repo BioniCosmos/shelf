@@ -14,6 +14,9 @@ import {
 import type { Work } from '@prisma/client'
 import type { ColumnDef, SortingFn } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { useState } from 'react'
+import FormDialog from './Dialog'
+import { DeleteWorkButton } from './dialog-operations'
 
 declare module '@tanstack/react-table' {
   interface SortingFns {
@@ -94,24 +97,36 @@ export const columns: ColumnDef<Work>[] = [
   },
   {
     id: 'actions',
-    cell: () => {
-      // const work = row.original
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+    cell: ({ row }) => <ActionMenu id={row.original.id} />,
   },
 ]
+
+function ActionMenu({ id }: { id: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setOpen(true)}>
+            Delete the work
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <FormDialog
+        state={{ open, setOpen }}
+        title="Delete the work"
+        description="Are you sure to delete the work?"
+      >
+        <DeleteWorkButton ids={[id]} />
+      </FormDialog>
+    </>
+  )
+}

@@ -22,3 +22,8 @@ export async function createWork(formData: FormData) {
   await prisma.work.create({ data: validatedFields.data })
   revalidatePath('/dashboard')
 }
+
+export async function deleteWork(ids: string[]) {
+  await prisma.work.deleteMany({ where: { id: { in: ids } } })
+  revalidatePath('/dashboard')
+}
