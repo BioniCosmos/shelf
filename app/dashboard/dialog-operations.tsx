@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { createWork, deleteWork } from '@/lib/actions'
 import { cn } from '@/lib/utils'
 import {
   useContext,
@@ -11,7 +12,6 @@ import {
 } from 'react'
 import { useFormStatus } from 'react-dom'
 import { DialogContext } from './Dialog'
-import { createWork, deleteWork } from './work'
 
 export function WorkForm({ className }: ComponentProps<'form'>) {
   return (
