@@ -9,14 +9,17 @@ export type User = Awaited<ReturnType<typeof getUser>>
 export default async function Page() {
   const works = await prisma.work.findMany({ orderBy: { createdAt: 'desc' } })
   const user = await getUser()
+  const randomSentence = await (
+    await fetch('https://v1.hitokoto.cn/?encode=text')
+  ).text()
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
       <div className="flex items-center justify-between space-y-2">
-        <div>
+        <div className="space-y-px">
           <h2 className="text-2xl font-bold tracking-tight">
             Hi, {getFirstName(user.name)}!
           </h2>
-          <p className="text-zinc-500">everyday sentences</p>
+          <p className="text-zinc-500">{randomSentence}</p>
         </div>
         <div className="flex items-center space-x-2">
           <UserNav user={user} />
