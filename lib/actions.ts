@@ -3,7 +3,7 @@
 import prisma from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { auth, signIn, signOut } from './auth'
+import { getUser, signIn, signOut } from './auth'
 
 const createWorkSchema = z.object({
   name: z.string().min(1),
@@ -14,28 +14,27 @@ const createWorkSchema = z.object({
 })
 
 export async function createWork(formData: FormData) {
-  const session = await auth()
-  if (!session?.user) {
-    throw Error('You must be signed in to perform this action.')
-  }
-
+  const user = await getUser()
   const validatedFields = createWorkSchema.safeParse(
     Object.fromEntries(formData)
   )
   if (!validatedFields.success) {
     return { errors: validatedFields.error.flatten().fieldErrors }
   }
-  await prisma.work.create({ data: validatedFields.data })
+  await prisma.work.create({
+    data: { ...validatedFields.data, userEmail: user.email },
+  })
   revalidatePath('/dashboard')
 }
 
 export async function deleteWork(id: string) {
-  const session = await auth()
-  if (!session?.user) {
-    throw Error('You must be signed in to perform this action.')
+  const user = await getUser()
+  const filter = { where: { id } }
+  if ((await prisma.work.findFirst(filter))?.userEmail !== user.email) {
+    throw Error('Unauthorized')
   }
 
-  await prisma.work.deleteMany({ where: { id } })
+  await prisma.work.delete(filter)
   revalidatePath('/dashboard')
 }
 

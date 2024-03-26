@@ -1,11 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        hostname: 'images.moecm.com',
-      },
-    ],
+  async redirects() {
+    return [{ source: '/', destination: '/login', permanent: true }]
   },
 }
 

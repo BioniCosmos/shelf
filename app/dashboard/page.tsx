@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth'
+import { getUser } from '@/lib/auth'
 import prisma from '@/lib/db'
 import DataTable from './DataTable'
 import UserNav from './UserNav'
@@ -28,16 +28,6 @@ export default async function Page() {
       <DataTable columns={columns} data={works} />
     </div>
   )
-}
-
-async function getUser() {
-  const session = await auth()
-  const user = session?.user
-  return {
-    name: user?.name ?? '',
-    email: user?.email ?? '',
-    image: user?.image ?? '',
-  }
 }
 
 const getFirstName = (fullName: string) => fullName.split(' ')[0]

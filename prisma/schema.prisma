@@ -16,4 +16,5 @@ model Work {
   comment   String
   link      String
   createdAt DateTime @default(now())
+  userEmail String
 }

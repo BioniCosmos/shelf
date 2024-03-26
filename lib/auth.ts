@@ -22,3 +22,17 @@ export const {
     signIn: '/login',
   },
 })
+
+export async function getUser() {
+  const session = await auth()
+  if (session === null || session.user === undefined) {
+    throw Error('You must be signed in to perform this action.')
+  }
+
+  const { user } = session
+  return {
+    name: user.name ?? '',
+    email: user.email ?? '',
+    image: user.image ?? '',
+  }
+}

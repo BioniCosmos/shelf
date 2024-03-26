@@ -6,7 +6,7 @@ import type { Work } from '@prisma/client'
 import { useState } from 'react'
 import { MagicCard } from 'react-magic-motion'
 import 'react-magic-motion/card.css'
-import doubanLogo from './assets/douban.png'
+import doubanLogo from './douban.png'
 
 export default function DisplayShelf({ works }: { works: Work[] }) {
   const categories = classifyAndSort(works, ({ name }) => name)
