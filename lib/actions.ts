@@ -3,7 +3,7 @@
 import prisma from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { auth, signIn } from './auth'
+import { auth, signIn, signOut } from './auth'
 
 const createWorkSchema = z.object({
   name: z.string().min(1),
@@ -49,4 +49,8 @@ export async function login(formData: FormData) {
     return { errors: validatedFields.error.flatten().fieldErrors }
   }
   await signIn(validatedFields.data.provider)
+}
+
+export async function logout() {
+  await signOut()
 }
