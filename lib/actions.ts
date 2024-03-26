@@ -40,7 +40,7 @@ export async function deleteWork(id: string) {
 }
 
 const loginSchema = z.object({
-  provider: z.enum(['github']),
+  provider: z.enum(['github', 'google']),
 })
 
 export async function login(formData: FormData) {

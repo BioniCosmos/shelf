@@ -6,6 +6,7 @@ import { Icons } from '../../components/icons'
 import loginLightImage from './login-light.png'
 
 export default function Page() {
+  const providers = ['GitHub', 'Google'] as const
   return (
     <>
       <div className="flex items-center text-lg font-medium gap-2 fixed top-10 left-10 lg:text-white">
@@ -26,10 +27,22 @@ export default function Page() {
               <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
             </div>
             <form className="grid gap-6" action={login}>
-              <Button variant="outline" name="provider" value="github">
-                <Icons.gitHub className="mr-2 h-4 w-4" />
-                GitHub
-              </Button>
+              {providers.map((provider) => {
+                const providerValue = provider.toLowerCase() as Lowercase<
+                  typeof provider
+                >
+                return (
+                  <Button
+                    variant="outline"
+                    name="provider"
+                    value={providerValue}
+                    key={provider}
+                  >
+                    <Icons value={providerValue} className="mr-2 h-4 w-4" />
+                    {provider}
+                  </Button>
+                )
+              })}
             </form>
           </div>
         </div>
