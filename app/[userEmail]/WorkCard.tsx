@@ -21,7 +21,7 @@ export default function DisplayShelf({ work }: { work: Work }) {
         onClick={() => setOpenWork(work.id)}
         className={cn(
           isOpen
-            ? 'p-10 bg-background bg-opacity-75 !flex-row gap-8 rounded-xl'
+            ? 'p-10 bg-white dark:bg-black bg-opacity-75 !flex-row gap-8 rounded-xl'
             : 'cursor-pointer'
         )}
       >
