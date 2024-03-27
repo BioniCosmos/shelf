@@ -1,3 +1,4 @@
+import ThemeToggle from '@/components/ThemeToggle'
 import { getUser } from '@/lib/auth'
 import prisma from '@/lib/db'
 import DataTable from './DataTable'
@@ -10,7 +11,7 @@ export default async function Page() {
   const works = await prisma.work.findMany({ orderBy: { createdAt: 'desc' } })
   const user = await getUser()
   const randomSentence = await (
-    await fetch('https://v1.hitokoto.cn/?encode=text')
+    await fetch('https://international.v1.hitokoto.cn/?encode=text')
   ).text()
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
@@ -21,7 +22,8 @@ export default async function Page() {
           </h2>
           <p className="text-zinc-500">{randomSentence}</p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-3 space-x-2">
+          <ThemeToggle />
           <UserNav user={user} />
         </div>
       </div>

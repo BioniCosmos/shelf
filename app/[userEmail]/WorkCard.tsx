@@ -21,7 +21,7 @@ export default function DisplayShelf({ work }: { work: Work }) {
         onClick={() => setOpenWork(work.id)}
         className={cn(
           isOpen
-            ? 'p-10 bg-white bg-opacity-75 !flex-row gap-8 rounded-xl'
+            ? 'p-10 bg-background bg-opacity-75 !flex-row gap-8 rounded-xl'
             : 'cursor-pointer'
         )}
       >
@@ -60,10 +60,7 @@ export default function DisplayShelf({ work }: { work: Work }) {
               <div className="flex items-center gap-1">
                 <Stars count={work.like} />
               </div>
-              <p
-                className="text-gray-500 md:text-xl lg:text-base xl:text-xl"
-                // dark:text-gray-400
-              >
+              <p className="text-zinc-500 md:text-xl lg:text-base xl:text-xl">
                 {work.comment}
               </p>
               <a href={work.link} target="_blank">
