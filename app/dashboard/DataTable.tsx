@@ -69,7 +69,11 @@ export default function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <Button onClick={() => setOpen(true)}>Create a new work</Button>
-        <FormDialog state={{ open, setOpen }} title="Create a new work">
+        <FormDialog
+          state={{ open, setOpen }}
+          title="Create a new work"
+          description=""
+        >
           <WorkForm />
         </FormDialog>
       </div>

@@ -36,7 +36,7 @@ export const DialogContext = createContext<DialogState>({
 interface Props {
   state: DialogState
   title: string
-  description?: string
+  description: string
   children: ReactElement
 }
 
@@ -54,7 +54,7 @@ export default function FormDialog({
         <DialogState className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
-            {description !== undefined && (
+            {description !== '' && (
               <DialogDescription>{description}</DialogDescription>
             )}
           </DialogHeader>

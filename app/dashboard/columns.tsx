@@ -15,7 +15,7 @@ import type { ColumnDef, SortingFn } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { useState } from 'react'
 import FormDialog from './Dialog'
-import { DeleteWorkButton } from './dialog-operations'
+import { DeleteWorkButton, WorkForm } from './dialog-operations'
 
 declare module '@tanstack/react-table' {
   interface SortingFns {
@@ -74,12 +74,50 @@ export const columns: ColumnDef<Work>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <ActionMenu id={row.original.id} />,
+    cell: ({ row }) => <ActionMenu work={row.original} />,
   },
 ]
 
-function ActionMenu({ id }: { id: string }) {
+function ActionMenu({ work }: { work: Work }) {
   const [open, setOpen] = useState(false)
+
+  const actionMap = {
+    delete: {
+      title: 'Delete the work',
+      description: 'Are you sure to delete the work?',
+      form: <DeleteWorkButton id={work.id} />,
+    },
+    update: {
+      title: 'Update the work',
+      description: '',
+      form: <WorkForm defaultForm={work} />,
+    },
+  }
+  type ActionKey = keyof typeof actionMap
+  const [actionKey, setActionKey] = useState<ActionKey>()
+
+  const openDialog = (actionKey: ActionKey) => () => {
+    setActionKey(actionKey)
+    setOpen(true)
+  }
+
+  function Dialog() {
+    if (actionKey === undefined) {
+      return null
+    }
+
+    const actionValue = actionMap[actionKey]
+    return (
+      <FormDialog
+        state={{ open, setOpen }}
+        title={actionValue.title}
+        description={actionValue.description}
+      >
+        {actionValue.form}
+      </FormDialog>
+    )
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -92,18 +130,17 @@ function ActionMenu({ id }: { id: string }) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            Delete the work
-          </DropdownMenuItem>
+          {Object.entries(actionMap).map(([actionKey, actionValue]) => (
+            <DropdownMenuItem
+              key={actionKey}
+              onClick={openDialog(actionKey as ActionKey)}
+            >
+              {actionValue.title}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
-      <FormDialog
-        state={{ open, setOpen }}
-        title="Delete the work"
-        description="Are you sure to delete the work?"
-      >
-        <DeleteWorkButton id={id} />
-      </FormDialog>
+      <Dialog />
     </>
   )
 }

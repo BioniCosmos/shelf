@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { getUser, signIn, signOut } from './auth'
 
-const createWorkSchema = z.object({
+const workFormSchema = z.object({
   name: z.string().min(1),
   cover: z.string().url().startsWith('https://'),
   like: z.coerce.number().min(1).max(5),
@@ -13,17 +13,22 @@ const createWorkSchema = z.object({
   link: z.string().url().startsWith('https://').or(z.string().length(0)),
 })
 
-export async function createWork(formData: FormData) {
+export async function createOrUpdateWork(
+  workId: string | null,
+  formData: FormData
+) {
   const user = await getUser()
-  const validatedFields = createWorkSchema.safeParse(
-    Object.fromEntries(formData)
-  )
+  const validatedFields = workFormSchema.safeParse(Object.fromEntries(formData))
   if (!validatedFields.success) {
     return { errors: validatedFields.error.flatten().fieldErrors }
   }
-  await prisma.work.create({
-    data: { ...validatedFields.data, userEmail: user.email },
-  })
+
+  const { data } = validatedFields
+  if (workId === null) {
+    await prisma.work.create({ data: { ...data, userEmail: user.email } })
+  } else {
+    await prisma.work.update({ where: { id: workId }, data })
+  }
   revalidatePath('/dashboard')
 }
 
