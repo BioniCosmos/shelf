@@ -5,11 +5,12 @@ import DataTable from './DataTable'
 import UserNav from './UserNav'
 import { columns } from './columns'
 
-export type User = Awaited<ReturnType<typeof getUser>>
-
 export default async function Page() {
-  const works = await prisma.work.findMany({ orderBy: { createdAt: 'desc' } })
   const user = await getUser()
+  const works = await prisma.work.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: 'desc' },
+  })
   const randomSentence = await (
     await fetch('https://international.v1.hitokoto.cn/?encode=text')
   ).text()

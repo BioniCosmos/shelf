@@ -13,14 +13,14 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="p-10 bg-white dark:bg-black flex gap-12">
+    <div className="flex gap-4 sm:gap-6 md:gap-10 lg:px-16">
       <picture className="basis-1/2">
         <source srcSet={`${work.cover}?format=avif`} type="image/avif" />
         <source srcSet={`${work.cover}?format=webp`} type="image/webp" />
         <img
           src={work.cover}
           alt={work.name}
-          className="max-w-full ml-auto mr-0"
+          className="max-w-full ml-auto mr-0 lg:mr-auto mt-4 shadow-2xl rounded-xl"
         />
       </picture>
       <div className="basis-1/2 flex flex-col gap-4">
@@ -29,13 +29,18 @@ export default async function Page({ params }: { params: { id: string } }) {
         </h1>
         <Stars count={work.like} />
         {work.comment !== '' && (
-          <p className="text-zinc-500 md:text-xl lg:text-base xl:text-xl">
-            {work.comment}
-          </p>
+          <p
+            className="text-zinc-500 md:text-xl lg:text-base xl:text-xl"
+            dangerouslySetInnerHTML={{
+              __html: work.comment.replaceAll('\n', '<br>'),
+            }}
+          />
         )}
-        <a href={work.link} target="_blank">
-          <Image src={doubanLogo} alt="Douban logo" width={30} height={30} />
-        </a>
+        {work.link !== '' && (
+          <a href={work.link} target="_blank">
+            <Image src={doubanLogo} alt="Douban logo" width={30} height={30} />
+          </a>
+        )}
       </div>
     </div>
   )

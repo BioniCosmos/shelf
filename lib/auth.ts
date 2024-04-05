@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import Google from 'next-auth/providers/google'
+import prisma from './db'
 
 export const {
   handlers: { GET, POST },
@@ -29,10 +30,19 @@ export async function getUser() {
     throw Error('You must be signed in to perform this action.')
   }
 
-  const { user } = session
-  return {
-    name: user.name ?? '',
-    email: user.email ?? '',
-    image: user.image ?? '',
+  const {
+    name,
+    email,
+    image: avatar,
+  } = session.user as {
+    name: string
+    email: string
+    image: string
   }
+
+  const user = await prisma.user.findUnique({ where: { email } })
+  if (user === null) {
+    return prisma.user.create({ data: { name, email, avatar } })
+  }
+  return user
 }

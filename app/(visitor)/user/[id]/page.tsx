@@ -1,18 +1,26 @@
 import prisma from '@/lib/db'
 import { classifyAndSort } from '@/lib/utils'
+import { BookDashed } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-export default async function Page({
-  params,
-}: {
-  params: { userEmail: string }
-}) {
-  const works = await prisma.work.findMany({
-    where: { userEmail: decodeURIComponent(params.userEmail) },
+export default async function Page({ params }: { params: { id: string } }) {
+  const user = await prisma.user.findUnique({
+    where: { id: params.id },
+    include: { works: true },
   })
-  if (works.length === 0) {
+  if (user === null) {
     notFound()
+  }
+
+  const { works } = user
+  if (works.length === 0) {
+    return (
+      <div className="text-muted-foreground flex gap-2 items-center justify-center h-[calc(100dvh_-_76px)]">
+        <BookDashed />
+        This is an empty shelf.
+      </div>
+    )
   }
 
   const categories = classifyAndSort(works, ({ name }) => name)

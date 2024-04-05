@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { logout } from '@/lib/actions'
-import type { User } from './page'
+import type { User } from '@prisma/client'
 
 export default async function UserNav({ user }: { user: User }) {
   return (
@@ -17,7 +17,7 @@ export default async function UserNav({ user }: { user: User }) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-9 w-9">
-            <AvatarImage src={user.image} />
+            <AvatarImage src={user.avatar} />
             <AvatarFallback>{getAbbr(user.name)}</AvatarFallback>
           </Avatar>
         </Button>

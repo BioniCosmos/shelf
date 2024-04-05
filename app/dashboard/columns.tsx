@@ -53,7 +53,7 @@ export const columns: ColumnDef<Work>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center gap-1">
-        <Stars count={row.getValue('like')} />
+        <Stars count={row.getValue('like')} size="small" />
       </div>
     ),
     invertSorting: true,

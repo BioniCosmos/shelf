@@ -25,7 +25,7 @@ export async function createOrUpdateWork(
 
   const { data } = validatedFields
   if (workId === null) {
-    await prisma.work.create({ data: { ...data, userEmail: user.email } })
+    await prisma.work.create({ data: { ...data, userId: user.id } })
   } else {
     await prisma.work.update({ where: { id: workId }, data })
   }
@@ -35,7 +35,7 @@ export async function createOrUpdateWork(
 export async function deleteWork(id: string) {
   const user = await getUser()
   const filter = { where: { id } }
-  if ((await prisma.work.findFirst(filter))?.userEmail !== user.email) {
+  if ((await prisma.work.findFirst(filter))?.userId !== user.id) {
     throw Error('Unauthorized')
   }
 
