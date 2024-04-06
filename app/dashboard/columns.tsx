@@ -13,6 +13,7 @@ import {
 import type { Work } from '@prisma/client'
 import type { ColumnDef, SortingFn } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 import FormDialog from './Dialog'
 import { DeleteWorkButton, WorkForm } from './dialog-operations'
@@ -130,6 +131,9 @@ function ActionMenu({ work }: { work: Work }) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={`/work/${work.id}`}>View the work</Link>
+          </DropdownMenuItem>
           {Object.entries(actionMap).map(([actionKey, actionValue]) => (
             <DropdownMenuItem
               key={actionKey}

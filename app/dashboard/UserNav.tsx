@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { logout } from '@/lib/actions'
 import type { User } from '@prisma/client'
+import Link from 'next/link'
 
 export default async function UserNav({ user }: { user: User }) {
   return (
@@ -32,6 +33,9 @@ export default async function UserNav({ user }: { user: User }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href={`/user/${user.id}`}>My shelf</Link>
+        </DropdownMenuItem>
         <form action={logout}>
           <DropdownMenuItem asChild>
             <button className="w-full">Log out</button>
