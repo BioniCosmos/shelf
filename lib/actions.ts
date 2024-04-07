@@ -24,11 +24,11 @@ export async function createOrUpdateWork(
   }
 
   const { data } = validatedFields
-  if (workId === null) {
-    await prisma.work.create({ data: { ...data, userId: user.id } })
-  } else {
-    await prisma.work.update({ where: { id: workId }, data })
-  }
+  await prisma.work.upsert({
+    create: { ...data, userId: user.id },
+    update: data,
+    where: { id: workId ?? '' },
+  })
   revalidatePath('/dashboard')
 }
 
