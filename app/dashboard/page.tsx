@@ -1,9 +1,16 @@
 import ThemeToggle from '@/components/ThemeToggle'
 import { getUser } from '@/lib/auth'
 import prisma from '@/lib/db'
+import { openGraph } from '@/lib/metadata'
+import type { Metadata } from 'next'
 import DataTable from './DataTable'
 import UserNav from './UserNav'
 import { columns } from './columns'
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  openGraph: { title: 'Dashboard', ...openGraph },
+}
 
 export default async function Page() {
   const user = await getUser()

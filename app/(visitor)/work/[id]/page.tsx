@@ -1,16 +1,22 @@
 import doubanLogo from '@/assets/douban.png'
 import { Stars } from '@/components/Stars'
 import prisma from '@/lib/db'
+import { openGraph } from '@/lib/metadata'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+
+export const metadata: Metadata = { openGraph }
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params
   const work = await prisma.work.findUnique({ where: { id } })
-
   if (work === null) {
     notFound()
   }
+
+  metadata.title = work.name
+  metadata.openGraph!.title = work.name
 
   return (
     <div className="flex gap-4 sm:gap-6 md:gap-10 lg:px-16">

@@ -1,8 +1,15 @@
 import { Button } from '@/components/ui/button'
 import { login } from '@/lib/actions'
+import { openGraph } from '@/lib/metadata'
 import { Library } from 'lucide-react'
+import type { Metadata } from 'next'
 import { Icons } from '../../components/icons'
 import Landscope from './Landscope'
+
+export const metadata: Metadata = {
+  title: 'Login',
+  openGraph: { title: 'Login', ...openGraph },
+}
 
 export default function Page() {
   const providers = ['GitHub', 'Google'] as const

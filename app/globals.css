@@ -74,7 +74,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.react-magic-motion-background-fade {
-  @apply backdrop-blur;
-}

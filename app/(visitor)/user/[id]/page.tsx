@@ -1,8 +1,12 @@
 import prisma from '@/lib/db'
+import { openGraph } from '@/lib/metadata'
 import { classifyAndSort } from '@/lib/utils'
 import { BookDashed } from 'lucide-react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+
+export const metadata: Metadata = { openGraph }
 
 export default async function Page({ params }: { params: { id: string } }) {
   const user = await prisma.user.findUnique({
@@ -12,6 +16,9 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (user === null) {
     notFound()
   }
+
+  metadata.title = user.name
+  metadata.openGraph!.title = user.name
 
   const { works } = user
   if (works.length === 0) {
