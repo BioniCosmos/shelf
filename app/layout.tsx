@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     ...openGraph,
   },
   robots: 'none',
+  metadataBase:
+    process.env.BASE_URL !== undefined ? new URL(process.env.BASE_URL) : null,
 }
 
 export default function RootLayout({

@@ -6,11 +6,11 @@ export const openGraph: Metadata['openGraph'] = {
   siteName: 'Shelf',
   locale: 'en_US',
   images: {
-    url: '/opengraph-image',
+    url: `${process.env.BASE_URL ?? ''}/opengraph-image`,
     alt,
     ...size,
     type: contentType,
   },
-  url: 'https://shelf.moecm.com',
+  url: process.env.BASE_URL,
   type: 'website',
 }
